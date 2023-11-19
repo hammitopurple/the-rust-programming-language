@@ -17,10 +17,15 @@ fn main() {
         println!("five is bigger than two!")
     }
 
-    // infinite_loop();
+    if false {
+        infinite_loop();
+    }
 
     let fib5 = fib(5);
-    println!("this is the value of fib5: {fib5}")
+    println!("this is the value of fib5: {fib5}");
+
+    let (a, b, c) = multiple_let();
+    println!("these are their new values: {a}, {b}, {c}");
 }
 
 fn another_function() {
@@ -69,6 +74,13 @@ fn fib(n: i32) -> i32 {
     return a;
 }
 
-fn multiple_let() {
-    let (mut a, mut b, mut c): (u8, f32, i32);
+fn multiple_let() -> (u8, f32, i32) {
+    let (mut a, mut b, mut c): (u8, f32, i32) = (8, 5.5, 99);
+    println!("these are their values: {a}, {b}, {c}");
+
+    // mutate the values
+    a = 7;
+    b = 4.5;
+    c = 98;
+    return (a, b, c);
 }
