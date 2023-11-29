@@ -214,3 +214,26 @@ fn double_free() {
     // let s_own = *s_ref; // error: cannot move out of `*s_ref` which is behind a shared reference
     println!("{}", s_ref);
 }
+
+#[allow(dead_code)]
+fn ref_test() {
+    // Mutable reference can be dereferenced and edited
+    let mut a = String::from("a");
+    let b = &mut a;
+    *b = String::from("b");
+    println!("{}", b);
+
+    // Immutable reference cannot be dereferenced then edited
+    let mut a = String::from("a");
+    let b = &a;
+    // *b = String::from("b") // error: cannot assign to `*b`, which is behind a `&` reference
+    println!("{}", b);
+
+    // Cannot have both immutable and mutable reference at the same time
+    let c = &mut a;
+    // let d = &a; // cannot borrow `a` as immutable because it is also borrowed as mutable
+
+    // Cannot have more than one mutable reference at the same time
+    // let e = &mut a; // cannot borrow `a` as mutable more than once at a time
+    println!("{}", c);
+}
