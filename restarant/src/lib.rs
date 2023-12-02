@@ -1,21 +1,5 @@
-use back_of_house::Appetizer;
-
-#[allow(dead_code)]
-mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
-
-        fn seat_at_table() {}
-    }
-
-    mod serving {
-        fn take_order() {}
-
-        fn serve_order() {}
-
-        fn take_payment() {}
-    }
-}
+// declare a private module called front_of_house
+mod front_of_house;
 
 // Shortening the path
 use front_of_house::hosting;
@@ -28,7 +12,10 @@ pub fn eat_at_restaurant() {
     front_of_house::hosting::add_to_waitlist();
 
     // Shortened path due to `use`
-    hosting::add_to_waitlist()
+    hosting::add_to_waitlist();
+
+    // Cannot use a non-pub module, even though serving::take_payment() is pub
+    // crate::front_of_house::serving::take_payment(); // error: module `serving` is private
 }
 
 #[allow(dead_code)]
@@ -63,6 +50,8 @@ mod back_of_house {
 
     fn cook_order() {}
 }
+
+use back_of_house::Appetizer;
 
 pub fn eat_breakfast() {
     // Create a breakfast order
