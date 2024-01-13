@@ -68,6 +68,34 @@ fn make_a_cloner<'a>(s_ref: &'a str) -> impl Fn() -> String + 'a {
     move || s_ref.to_string()
 }
 
+fn iterator_non_mutable_reference() {
+    let v = vec![1, 2, 3];
+
+    // let v_iter = v.iter();
+    // assert_eq!(v_iter.next(), Some(&1)); // error: cannot borrow `v_iter` as mutable, as it is not declared as mutable
+
+    // Need to declare the iterator as mutable because .next() will change its internal state
+    let mut v_iter = v.iter();
+    assert_eq!(v_iter.next(), Some(&1));
+}
+
+fn consuming_adaptor() {
+    // Demonstrate that thesum method consumes an iterator
+    let v = vec![1, 2, 3];
+    let v_iter = v.iter();
+
+    let total: i32 = v_iter.sum();
+    println!("the total is {total}");
+    // println!("{:?}", v_iter); // error: borrow of moved value: `v_iter`
+}
+
+fn iterator_adaptor() {
+    let v = vec![1, 2, 3];
+    let v2: Vec<_> = v.iter().map(|x| x + 1).collect();
+
+    assert_eq!(v2, vec![2, 3, 4]);
+}
+
 fn main() {
     // Create the store with 2 blue shirts and 1 red shirt
     let store = Inventory {
@@ -96,4 +124,8 @@ fn main() {
     let cloner = make_a_cloner(&s_own);
     let bar = cloner();
     println!("{bar}");
+
+    iterator_non_mutable_reference();
+    consuming_adaptor();
+    iterator_adaptor();
 }
