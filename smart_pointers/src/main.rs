@@ -64,6 +64,15 @@ impl Drop for CustomSmartPointer {
     }
 }
 
+use crate::ListRc::{ConsRc, NilRc};
+use std::rc::Rc;
+
+#[derive(Debug)]
+enum ListRc {
+    ConsRc(i32, Rc<ListRc>),
+    NilRc,
+}
+
 fn main() {
     create_box();
     create_list();
@@ -85,4 +94,10 @@ fn main() {
     };
     println!("CustomSmartPointers created.");
     println!("{:?}", d);
+
+    let a1 = Rc::new(ConsRc(5, Rc::new(ConsRc(10, Rc::new(NilRc)))));
+    let b1 = ConsRc(3, Rc::clone(&a1));
+    let c1 = ConsRc(4, Rc::clone(&a1));
+    println!("{:?}", b1);
+    println!("{:?}", c1);
 }
