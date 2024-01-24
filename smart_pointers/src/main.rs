@@ -51,6 +51,19 @@ fn hello_too(name: &String) {
     println!("Hello too, {name}!");
 }
 
+use core::ops::Drop;
+
+#[derive(Debug)]
+struct CustomSmartPointer {
+    data: String,
+}
+
+impl Drop for CustomSmartPointer {
+    fn drop(&mut self) {
+        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+    }
+}
+
 fn main() {
     create_box();
     create_list();
@@ -62,4 +75,14 @@ fn main() {
 
     let b = Box::new(String::from("rust"));
     hello(&b);
+
+    let c = CustomSmartPointer {
+        data: String::from("my stuff"),
+    };
+    drop(c);
+    let d = CustomSmartPointer {
+        data: String::from("other stuff"),
+    };
+    println!("CustomSmartPointers created.");
+    println!("{:?}", d);
 }
