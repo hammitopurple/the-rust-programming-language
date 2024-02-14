@@ -1,3 +1,4 @@
+use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
@@ -80,7 +81,7 @@ fn multiple_transmitters() {
 
         for val in vals {
             tx1.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_millis(100));
         }
     });
 
@@ -95,7 +96,7 @@ fn multiple_transmitters() {
 
         for val in vals {
             tx.send(val).unwrap();
-            thread::sleep(Duration::from_secs(1));
+            thread::sleep(Duration::from_millis(100));
         }
     });
 
@@ -106,9 +107,47 @@ fn multiple_transmitters() {
     }
 }
 
+fn mutex_usage() {
+    let m = Mutex::new(5);
+    {
+        // Need to lock the mutex first before you can use it
+        // Lock to prevent other threads from modifying the value
+        let mut num = m.lock().unwrap();
+        *num = 6;
+    }
+    // MutexGuard is a smart pointer that implements the Drop trait
+    // Its Drop implementation releases the lock automatically when a MutexGuard goes out of scope
+    println!("m = {:?}", m)
+}
+
+fn sharing_mutex() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        // Shadow `counter` from the parent's scope
+        let counter = Arc::clone(&counter);
+
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+            *num += 1;
+        });
+        handles.push(handle)
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap())
+}
+
 fn main() {
     simple_thread_join();
     using_channel();
     sending_multiple_values();
     multiple_transmitters();
+
+    mutex_usage();
+    sharing_mutex();
 }
