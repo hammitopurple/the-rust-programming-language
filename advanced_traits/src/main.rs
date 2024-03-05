@@ -121,6 +121,19 @@ impl fmt::Display for Wrapper {
     }
 }
 
+use std::collections::HashMap;
+
+/// People is a tuple struct
+struct People(HashMap<i32, String>);
+
+impl People {
+    /// add_name is the example public API as described in 19.3
+    /// Although I'm not sure why you would even want to use i32 as a key
+    fn add_name(&mut self, name: &str) -> Option<String> {
+        self.0.insert(rand::random(), name.to_string())
+    }
+}
+
 fn main() {
     let mut counter = Counter { value: 5 };
     println!("{:?}", counter.next());
@@ -144,4 +157,8 @@ fn main() {
 
     let w = Wrapper(vec![String::from("Hello"), String::from("world")]);
     println!("w = {}", w);
+
+    let mut people = People(HashMap::new());
+    assert_eq!(people.add_name("user1"), None);
+    assert_eq!(people.add_name("user1"), None);
 }
