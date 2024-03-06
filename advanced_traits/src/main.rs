@@ -134,6 +134,21 @@ impl People {
     }
 }
 
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(arg) + f(arg)
+}
+
+#[derive(Debug)]
+#[allow(unused)]
+enum Status {
+    Value(u32),
+    Stop,
+}
+
 fn main() {
     let mut counter = Counter { value: 5 };
     println!("{:?}", counter.next());
@@ -161,4 +176,11 @@ fn main() {
     let mut people = People(HashMap::new());
     assert_eq!(people.add_name("user1"), None);
     assert_eq!(people.add_name("user1"), None);
+
+    assert_eq!(do_twice(add_one, 1), 4);
+    // let y = 5;
+    // do_twice(|x| y + 1, 4); // error!
+
+    let list_of_statuses: Vec<Status> = (0u32..20).map(Status::Value).collect();
+    println!("{:?}", list_of_statuses);
 }
